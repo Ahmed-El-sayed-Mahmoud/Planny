@@ -1,9 +1,9 @@
 'use client'
 import { useChat } from '@/context/ChatContext'
 import React, { useEffect, useState } from 'react'
-import { LoadChatsAction } from './serverActions';
+import { LoadChatsAction } from '../serverActions';
 import toast from 'react-hot-toast';
-import ChatsFallback from './loading';
+import ChatsFallback from '../loading';
 
 function ChatList() {
     const { chats, setChats, setActiveChatId, activeChatId } = useChat();

@@ -29,8 +29,9 @@ export default function RootLayout({
       <body className={electrolize.className}>
       
       <UserProvider>
-          <Header /> 
+          
           <ChatProvider>
+          <Header /> 
             {children} 
           </ChatProvider>
           

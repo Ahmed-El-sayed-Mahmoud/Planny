@@ -2,7 +2,7 @@
 import { useChat } from "@/context/ChatContext";
 import { FormEvent, KeyboardEvent } from "react";
 import { useState } from "react";
-import { getResponseAction, SaveMessagesAction } from "./serverActions";
+import { getResponseAction, SaveMessagesAction } from "../serverActions";
 import { TablesInsert } from "@/src/Planny.Domain/EntitiesTypes/EntityTypes";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";

@@ -1,6 +1,6 @@
 'use client'
 import React, { useState } from "react";
-import { AddChatAction } from "./serverActions";
+import { AddChatAction } from "../serverActions";
 import toast, { ToastOptions } from "react-hot-toast";
 import { useChat } from "@/context/ChatContext";
 
@@ -37,10 +37,32 @@ export default function Modal() {
       {/* Toggle Button */}
       <button
         onClick={toggleModal}
-        className="w-full block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        className="w-full block text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 2xs:hidden lg:block"
         type="button"
       >
         Start New Chat
+      </button>
+
+      <button
+        onClick={toggleModal}
+        className="lg:hidden absolute bottom-0 left-0 bg-blue-700 hover:bg-blue-800 text-white rounded-full p-3 shadow-lg focus:ring-4 focus:outline-none focus:ring-blue-300"
+        type="button"
+      >
+        <svg
+          className="w-3 h-3"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            d="M12 4v16m8-8H4"
+          />
+        </svg>
+        <span className="sr-only">Open modal</span>
       </button>
 
       {/* Modal */}

@@ -5,8 +5,8 @@ import Message from './Message';
 import { useChat } from '@/context/ChatContext';
 import LoadingMsg from './LoadingMsg';
 import MessagesLoader from './MessagesLoader';
-import { ChangeHistoryAction, LoadNewMessages } from './serverActions';
-import { Tables, TablesInsert } from '@/src/Planny.Domain/EntitiesTypes/EntityTypes';
+import { ChangeHistoryAction, LoadNewMessages } from '../serverActions';
+import { Tables} from '@/src/Planny.Domain/EntitiesTypes/EntityTypes';
 import toast from 'react-hot-toast';
 
 function ChatPage() {
@@ -62,8 +62,8 @@ function ChatPage() {
                 )}
                 {isLoading && <LoadingMsg />}
             </div>
-            <div className="chatInput m-0 p-0">
-                {activeChatId ? <InputText /> : ""}
+            <div className="chatInput m-0 p-0 ">
+                {activeChatId ? <InputText /> : <></>}
             </div>
         </div>
     );
