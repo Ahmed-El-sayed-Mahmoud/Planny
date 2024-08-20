@@ -1,36 +1,108 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Event Planning Assistant
+
+## Overview
+
+The Event Planning Assistant is a web application designed to assist users in organizing events by providing AI-generated suggestions and answering queries related to event planning. The application uses a combination of advanced technologies and AI to offer a comprehensive event planning solution.
+
+## Features
+
+- **Passwordless Authentication**: Users can log in using a passcode sent to their email via Supabase.
+- **AI-Powered Event Assistance**: Get venue suggestions, logistical advice, and answers to event planning queries.
+- **Real-Time Chat System**: Chat with the AI assistant
+- **Word Cloud Visualization**: Analyze the most used words in user prompts using amCharts.
+- **Responsive UI**: Designed to be responsive and scalable across various devices.
+
+## Tech Stack
+
+- **Frontend**: Next.js (v14+), Tailwind CSS
+- **Backend**: Supabase, Drizzle
+- **AI**: LangChain, GeminiAPI
+- **Database**: Supabase
+- **Authentication**: Supabase Passwordless Authentication
+- **Visualization**: amCharts
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js (v18+)
+- Yarn or npm
+- Supabase account
+- OpenAI API Key
+
+### Setup
+
+1. **Clone the repository**
+
+    ```bash
+    git clone https://github.com/your-username/event-planning-assistant.git
+    cd event-planning-assistant
+    ```
+
+2. **Install dependencies**
+
+    ```bash
+    yarn install
+    # or
+    npm install
+    ```
+
+3. **Setup environment variables**
+
+    Create a `.env.local` file in the root directory and add the following environment variables:
+
+    ```env
+    NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
+    NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+    SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key
+    OPENAI_API_KEY=your-openai-api-key
+    ```
+
+4. **Configure Supabase**
+
+    Follow the Supabase documentation to set up authentication and database schemas. Create tables for storing user data and chat history.
+
+5. **Run Prisma Migrations**
+
+    Set up Prisma and run the migrations to configure your database schema.
+
+    ```bash
+    yarn prisma migrate dev
+    # or
+    npm run prisma migrate dev
+    ```
+
+6. **Run the development server**
+
+    ```bash
+    yarn dev
+    # or
+    npm run dev
+    ```
+
+    Open `http://localhost:3000` in your browser to view the application.
+
+## Features Implementation
+
+### Authentication
+
+- Uses Supabase's passwordless authentication to allow users to sign in via email.
+
+### AI-Powered Assistant
+
+- Implemented using LangChain and OpenAI to provide relevant answers and suggestions based on user queries.
+- Real-time chat with streaming responses for an interactive user experience.
+- Chat history is saved and retrieved from Supabase.
+
+### Visualization
+
+- Word cloud chart generated using amCharts to visualize the most frequently used words in user prompts.
+
+## Testing
+
+Run the following commands to execute tests:
 
 ```bash
-npm run dev
+yarn test
 # or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+npm test
