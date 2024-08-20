@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from 'next/link';
 const Header = () => {
   return (
-    <header className="bg-black text-white p-4 flex items-center justify-between border-gray-900 border-solid border-b-2 p-4">
+    <header className="bg-black text-white  flex items-center justify-between border-gray-900 border-solid border-b-2 p-4">
       <div className="flex items-center justify-center align-baseline">
       <Image
         width={50}
@@ -20,7 +20,7 @@ const Header = () => {
             <Link href="/">Home</Link>
           </li>
           <li>
-          <Link href="/about">About</Link>
+          <Link href="/chat">Chat</Link>
           </li>
           <li>
           <Link href="/contact">Contact</Link>

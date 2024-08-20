@@ -9,43 +9,37 @@ import { ChangeHistoryAction, LoadNewMessages } from './serverActions';
 import { Tables, TablesInsert } from '@/src/Planny.Domain/EntitiesTypes/EntityTypes';
 import toast from 'react-hot-toast';
 
-
 function ChatPage() {
-    const { messages, isLoading,activeChatId,setMessages  } = useChat();
+    const { messages, isLoading, activeChatId, setMessages } = useChat();
     const chatAreaRef = useRef<HTMLDivElement>(null);
     const [loadingMsgs, setLoadingMsgs] = useState(false);
 
-    useEffect(() => {
+    const scrollToBottom = () => {
         if (chatAreaRef.current) {
             chatAreaRef.current.scrollTop = chatAreaRef.current.scrollHeight;
         }
-    }, [messages]);
+    };
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [messages, loadingMsgs]);
 
     useEffect(() => {
         const loadMessages = async () => {
-            if(!activeChatId)
-                return 
+            if (!activeChatId) return;
             setLoadingMsgs(true);
             const fetchedMessages = await LoadNewMessages(activeChatId!);
-            if(fetchedMessages.error)
-            {
-                toast.error("Error Loading chat messages") 
-            }
-            else
-            {
-                console.log(fetchedMessages)
+            if (fetchedMessages.error) {
+                toast.error("Error Loading chat messages");
+            } else {
                 setMessages(fetchedMessages.data as Tables<'message'>[]);
-                await ChangeHistoryAction(fetchedMessages.data!)
-                setLoadingMsgs(false)
+                await ChangeHistoryAction(fetchedMessages.data!);
+                setLoadingMsgs(false);
             }
-            
-           
         };
 
         loadMessages();
-    },[activeChatId,setMessages]);
-
-    
+    }, [activeChatId, setMessages]);
 
     return (
         <div className="flex flex-col h-full w-full px-2">
@@ -53,7 +47,6 @@ function ChatPage() {
                 ref={chatAreaRef}
                 className="chatArea flex-grow overflow-y-auto p-4 bg-gray-100 w-full overflow-x-hidden"
             >
-               
                 {loadingMsgs ? (
                     <MessagesLoader />
                 ) : (
@@ -62,7 +55,6 @@ function ChatPage() {
                             key={index}
                             text={val.content}
                             sender={val.sender}
-
                             id={val.id?-1:index}
                             last_id={messages.length - 1}
                         />
@@ -71,7 +63,7 @@ function ChatPage() {
                 {isLoading && <LoadingMsg />}
             </div>
             <div className="chatInput m-0 p-0">
-                {activeChatId?<InputText />:""}
+                {activeChatId ? <InputText /> : ""}
             </div>
         </div>
     );

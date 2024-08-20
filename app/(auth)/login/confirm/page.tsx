@@ -26,13 +26,23 @@ function Confirm() {
     }
 
     const obj = { email, token: formData.get("token") as string };
+    setLoading(true);
+    const toastId = toast.loading("Verifying OTP...");
     const error = await verifyOTP(obj);
+    
+    toast.dismiss(toastId);
+    
     if (error) {
       toast.error(error);
+      setLoading(false);
       return;
     }
+
     localStorage.removeItem("email");
-    toast.success(`Welcome back ${email.split("@")[0]}`);
+    toast.success(`Welcome back ${email.split("@")[0]}!`);
+    setLoading(false);
+
+    router.push('/chat');
   };
 
   const Resend = async () => {
@@ -41,7 +51,11 @@ function Confirm() {
       return;
     }
 
+    const toastId = toast.loading("Resending OTP...");
     const error = await signIn({ email });
+
+    toast.dismiss(toastId);
+
     if (error) {
       toast.error(error);
     } else {
@@ -87,7 +101,7 @@ function Confirm() {
 
                   <div className="flex flex-row items-center justify-center text-center text-sm font-medium space-x-1 text-gray-500">
                     <p>Didn&apos;t receive code?</p>
-                    <p onClick={Resend} className="cursor-pointer">Resend</p>
+                    <p onClick={Resend} className="cursor-pointer text-blue-500">Resend</p>
                   </div>
                 </div>
               </div>

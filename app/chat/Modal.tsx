@@ -1,40 +1,36 @@
 'use client'
 import React, { useState } from "react";
 import { AddChatAction } from "./serverActions";
-import toast from "react-hot-toast";
+import toast, { ToastOptions } from "react-hot-toast";
 import { useChat } from "@/context/ChatContext";
-import { Tables, TablesInsert } from "@/src/Planny.Domain/EntitiesTypes/EntityTypes";
+
 
 export default function Modal() {
   const [isOpen, setIsOpen] = useState(false);
-  const[loading,setLoading]=useState(false);
-  const{setChats,setActiveChatId}=useChat();
+  const [loading, setLoading] = useState(false);
+  const { setChats, setActiveChatId } = useChat();
 
   const toggleModal = () => {
     setIsOpen(!isOpen);
   };
 
-  const addChatClient=async(fromData:FormData)=>{
-    const chatName=fromData.get('name');
-    if(!chatName)
-        toast.error("You should give a chat name");
-    else
-    {
-        setLoading(true);
-        const res=await AddChatAction(chatName as string)
-        if(!res.data)
-            toast.error("Error creating new chat")
-        else
-            setChats(prev=>[(res.data)!,...prev,])
-        
-        setActiveChatId(res.data!.id)
-        setLoading(false)
-        setIsOpen(!isOpen);
-        
+  const addChatClient = async (fromData: FormData) => {
+    const chatName = fromData.get('name');
+    if (!chatName) {
+      toast.error("You should give a chat name");
+    } else {
+      toast.error("Creating new chat")
+      const res = await AddChatAction(chatName as string);
+      if (!res.data) {
+        toast.error("Error creating new chat");
+      } else {
+        setChats(prev => [(res.data)!, ...prev]);
+        setActiveChatId(res.data!.id);
+      }
+      setIsOpen(!isOpen);
+      toast.remove();
     }
-   
-    
-  }
+  };
 
   return (
     <div className="p-3 w-full">
@@ -105,20 +101,49 @@ export default function Modal() {
                 <button
                   type="submit"
                   className="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                  disabled={loading}
                 >
-                  <svg
-                    className="me-1 -ms-1 w-5 h-5"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  {loading?'Creating....':'Create'}
+                  {loading ? (
+                    <>
+                      <svg
+                        className="animate-spin mr-2 h-5 w-5 text-white"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                      >
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
+                          strokeWidth="4"
+                        ></circle>
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
+                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.964 7.964 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                        ></path>
+                      </svg>
+                      Creating...
+                    </>
+                  ) : (
+                    <>
+                      <svg
+                        className="me-1 -ms-1 w-5 h-5"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                      Create
+                    </>
+                  )}
                 </button>
               </form>
             </div>
