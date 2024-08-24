@@ -9,17 +9,15 @@ The Event Planning Assistant is a web application designed to assist users in or
 - **Passwordless Authentication**: Users can log in using a passcode sent to their email via Supabase.
 - **AI-Powered Event Assistance**: Get venue suggestions, logistical advice, and answers to event planning queries.
 - **Real-Time Chat System**: Chat with the AI assistant
-- **Word Cloud Visualization**: Analyze the most used words in user prompts using amCharts.
 - **Responsive UI**: Designed to be responsive and scalable across various devices.
 
 ## Tech Stack
 
 - **Frontend**: Next.js (v14+), Tailwind CSS
 - **Backend**: Supabase, Drizzle
-- **AI**: LangChain, GeminiAPI
+- **AI**: GeminiAPI
 - **Database**: Supabase
 - **Authentication**: Supabase Passwordless Authentication
-- **Visualization**: amCharts
 
 ## Getting Started
 

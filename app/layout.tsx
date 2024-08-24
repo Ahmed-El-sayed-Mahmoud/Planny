@@ -31,7 +31,7 @@ export default function RootLayout({
       <UserProvider>
           
           <ChatProvider>
-          <Header /> 
+          <Header  /> 
             {children} 
           </ChatProvider>
           

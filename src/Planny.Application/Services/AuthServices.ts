@@ -1,47 +1,64 @@
 import { inject, injectable } from "inversify";
 import { IAuthServices } from "../IServices/IAuthService";
 import { createClient } from "./supabase/server";
-import { cookies } from "next/headers";
 import { AuthError, AuthOtpResponse } from "@supabase/supabase-js";
 import { DI_TYPES } from "@/src/DI/DI_TYPES";
 import type { IUserRepository } from "@/src/Planny.Domain/IRepositories/IUsersRepository";
-import { UserResponse } from "@supabase/supabase-js";
+
 @injectable()
 export class AuthServices implements IAuthServices {
     constructor(
         @inject(DI_TYPES.IUserRepository) 
         private readonly _userRepository: IUserRepository,
+    ) {}
+
+    async getAuthenticatedUser(): Promise<{ email: string } | null> {
+      console.log("****** get getAuthenticatedUser ********* reached")
+        const supabase = createClient();
+        const { data, error } = await supabase.auth.getUser();
+        console.log("data : ",data)
         
-      ) {}
-    async isAuthenticated(): Promise<UserResponse> {
-        const supabase=createClient(cookies())
-        const user=(await supabase.auth.getUser());
-        return user ; 
+        if (error) {
+            console.error("Error fetching authenticated user:", error.message);
+            return null;
+        }
+        
+        return data?.user ? { email: data.user.email! } : null;
     }
-    async signInWithOTP(email: string): Promise<AuthError|null> {
-        const supabase=createClient(cookies());
-        const {error}= await supabase.auth.signInWithOtp({
-            email ,
-        })
+
+    async signInWithOTP(email: string): Promise<AuthError | null> {
+        const supabase = createClient();
+        const { error } = await supabase.auth.signInWithOtp({ email });
+        
+        if (error) {
+            console.error("Error during sign in with OTP:", error.message);
+        }
+        
         return error;
     }
-    async VerifyOTP(email: string, token: string): Promise<AuthError | null | undefined> {
-        const supabase=createClient(cookies());
-        const {error}=await supabase.auth.verifyOtp({
+
+    async VerifyOTP(email: string, token: string): Promise<AuthError | null> {
+        const supabase = createClient();
+        const { error: verifyError } = await supabase.auth.verifyOtp({
             email,
             token,
             type: 'email',
-          });
-          if(error)
-            return error;
+        });
+        
+        if (verifyError) {
+            console.error("Error verifying OTP:", verifyError.message);
+            return verifyError;
+        }
 
-          const createUserResponse = await this._userRepository.createUser({ email, name: email });
+        const user = await this._userRepository.getUser(email);
+        if (!user) {
+            const { error: createUserError } = await this._userRepository.createUser({ email, name: email });
+            if (createUserError) {
+                console.error("Error creating user after OTP verification:", createUserError.message);
+                return new AuthError("User creation failed after OTP verification");
+            }
+        }
 
-          if (createUserResponse.error) {
-              return new AuthError("User creation failed after OTP verification");
-          }
-          return null;
-                
-
+        return null;
     }
 }

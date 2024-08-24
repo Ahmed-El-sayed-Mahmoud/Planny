@@ -8,4 +8,5 @@ export interface IMessageRepository {
   updateMessage(id: number, message: TablesUpdate<'message'>): Promise<RepositoryRespone<Tables<'message'> | null>>;
   deleteMessage(id: number): Promise<RepositoryRespone<void>>;
   getMessagesByChatId(chat_id: number): Promise<RepositoryRespone<Tables<'message'>[]>>;
+  getAllMessagesOfUser(userEmail: string): Promise<RepositoryRespone<{content:string}[]>> ;
 }

@@ -1,4 +1,8 @@
 export type RepositoryRespone<T>={
     data?:T,
-    error?:string
+    error?:{
+        message:string,
+        status:Number
+    },
+    
 }

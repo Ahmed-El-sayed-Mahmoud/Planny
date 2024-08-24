@@ -11,4 +11,5 @@ export interface IMessageServices {
     deleteMessage(id: number): Promise<ServiceResponse<void>>;
     
     getMessagesByChatId(chatId: number): Promise<ServiceResponse<Tables<'message'>[]>>;
+    getAllMessagesOfUser():Promise<ServiceResponse<string>>
   }

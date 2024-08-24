@@ -1,10 +1,11 @@
-import { db } from "../db/index"; 
-import { TablesInsert,Tables,TablesUpdate } from "@/src/Planny.Domain/EntitiesTypes/EntityTypes"; 
-import { IMessageRepository } from "@/src/Planny.Domain/IRepositories/IMessageRepository"; 
-import { messageTable } from "../db/schema"; 
-import { eq } from "drizzle-orm"; 
+import { db } from "../db/index";
+import { TablesInsert, Tables, TablesUpdate } from "@/src/Planny.Domain/EntitiesTypes/EntityTypes";
+import { IMessageRepository } from "@/src/Planny.Domain/IRepositories/IMessageRepository";
+import { chatTable, messageTable } from "../db/schema";
+import { eq } from "drizzle-orm";
 import { injectable } from "inversify";
 import { RepositoryRespone } from "@/src/Planny.Domain/IRepositories/RepositoryRespnse";
+import { StatusCodes } from "@/src/Constants/ErrorStatusCodes";
 
 @injectable()
 export class MessageRepository implements IMessageRepository {
@@ -15,7 +16,7 @@ export class MessageRepository implements IMessageRepository {
       const [result] = await db.insert(messageTable).values(message).returning();
       response.data = result as Tables<'message'>;
     } catch (error) {
-      response.error = "Error Creating new message";
+      response.error = { status: StatusCodes.INTERNAL_SERVER_ERROR, message: `Error Creating new message` };
     }
     return response;
   }
@@ -24,9 +25,13 @@ export class MessageRepository implements IMessageRepository {
     let response: RepositoryRespone<Tables<'message'> | null> = {};
     try {
       const [result] = await db.select().from(messageTable).where(eq(messageTable.id, id));
-      response.data = result as Tables<'message'> | null;
-    } catch (_) {
-      response.error = "Error Getting Message";
+      if (result) {
+        response.data = result;
+      } else {
+        response.error = { status: StatusCodes.NOT_FOUND, message: "Message not found" };
+      }
+    } catch (error) {
+      response.error = { status: StatusCodes.INTERNAL_SERVER_ERROR, message: `Error Getting Message` };
     }
     return response;
   }
@@ -35,9 +40,13 @@ export class MessageRepository implements IMessageRepository {
     let response: RepositoryRespone<Tables<'message'> | null> = {};
     try {
       const [result] = await db.update(messageTable).set(message).where(eq(messageTable.id, id)).returning();
-      response.data = result as Tables<'message'> | null;
-    } catch (_) {
-      response.error = "Error Updating Message";
+      if (result) {
+        response.data = result;
+      } else {
+        response.error = { status: StatusCodes.NOT_FOUND, message: "Message not found for updating" };
+      }
+    } catch (error) {
+      response.error = { status: StatusCodes.INTERNAL_SERVER_ERROR, message: `Error Updating Message` };
     }
     return response;
   }
@@ -45,9 +54,12 @@ export class MessageRepository implements IMessageRepository {
   async deleteMessage(id: number): Promise<RepositoryRespone<void>> {
     let response: RepositoryRespone<void> = {};
     try {
-      await db.delete(messageTable).where(eq(messageTable.id, id));
-    } catch (_) {
-      response.error = "Error Deleting Message";
+      const deletedCount = await db.delete(messageTable).where(eq(messageTable.id, id));
+      if (deletedCount.length === 0) {
+        response.error = { status: StatusCodes.NOT_FOUND, message: "Message not found for deletion" };
+      }  
+    } catch (error) {
+      response.error = { status: StatusCodes.INTERNAL_SERVER_ERROR, message: `Error Deleting Message` };
     }
     return response;
   }
@@ -56,9 +68,25 @@ export class MessageRepository implements IMessageRepository {
     let response: RepositoryRespone<Tables<'message'>[]> = {};
     try {
       const results = await db.select().from(messageTable).where(eq(messageTable.chat_id, chat_id));
-      response.data = results as Tables<'message'>[];
-    } catch (_) {
-      response.error = "Error Getting Messages by Chat ID";
+      response.data = results;
+    } catch (error) {
+      response.error = { status: StatusCodes.INTERNAL_SERVER_ERROR, message: `Error Getting Messages by Chat ID` };
+    }
+    return response;
+  }
+
+  async getAllMessagesOfUser(userEmail: string): Promise<RepositoryRespone<{ content: string }[]>> {
+    let response: RepositoryRespone<{ content: string }[]> = { data: [] };
+    try {
+      const results = await db
+        .select({ content: messageTable.content })
+        .from(messageTable)
+        .innerJoin(chatTable, eq(chatTable.id, messageTable.chat_id))
+        .where(eq(chatTable.user_email, userEmail) && eq(messageTable.sender, 'user'));
+
+      response.data = results;
+    } catch (error) {
+      response.error = { status: StatusCodes.INTERNAL_SERVER_ERROR, message: `Error Getting Messages` };
     }
     return response;
   }

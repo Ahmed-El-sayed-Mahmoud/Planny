@@ -2,6 +2,8 @@
 
 import React, { createContext, useState, ReactNode, useContext } from 'react';
 import { Tables, TablesInsert } from '@/src/Planny.Domain/EntitiesTypes/EntityTypes';
+
+
 type ChatContextType = {
   chats: TablesInsert<'chat'>[] | Tables<'chat'>[];
   setChats: React.Dispatch<React.SetStateAction<Tables<'chat'>[]>>
@@ -15,7 +17,10 @@ type ChatContextType = {
     sender: string;
 }[]>>
   isLoading:boolean;
-  setIsLoading:(bl:boolean)=>void
+  setIsLoading:(bl:boolean)=>void;
+  suggestions:string[],
+  setSuggestions:React.Dispatch<React.SetStateAction<string[]>>
+  
 };
 
 
@@ -24,6 +29,7 @@ const ChatContext = createContext<ChatContextType|undefined>(undefined);
 export const ChatProvider = ({ children }: { children: ReactNode }) => {
 
   const [chats, setChats] = useState<Tables<'chat'>[]>([]);
+  const [suggestions,setSuggestions]=useState<string[]>([]);
 
   const [activeChatId, setActiveChatId] = useState<number | null>(null);
   const [messages, setMessages] = useState<TablesInsert<'message'>[]>([]);
@@ -43,7 +49,9 @@ export const ChatProvider = ({ children }: { children: ReactNode }) => {
         messages,
         setMessages,
         isLoading,
-        setIsLoading
+        setIsLoading,
+        suggestions,
+        setSuggestions
       }}
     >
       {children}

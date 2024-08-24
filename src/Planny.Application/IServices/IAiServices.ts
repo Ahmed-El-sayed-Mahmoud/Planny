@@ -1,5 +1,5 @@
 import { Tables, TablesInsert } from "@/src/Planny.Domain/EntitiesTypes/EntityTypes"
-import { AiResponse } from "../ServicesTypes"
+import { AiResponse } from "../AiServiceResponse"
 export interface IAiServices{
 
     getResponse(msg:TablesInsert<'message'>):Promise<AiResponse>
