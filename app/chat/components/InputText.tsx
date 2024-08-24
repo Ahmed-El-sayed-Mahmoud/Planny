@@ -25,10 +25,11 @@ export default function InputText() {
             setInputValue(''); 
             const res = await getResponseAction(newMsg); 
             if (!res||res?.error) {
-              if(res?.error==="Not Authenticated")
+              if(res?.error?.status===401)
               {
                 toast.error("Not Autheticated")
                 router.push("/login")
+                return;
               }
                 toast.error("Error Generating Response :(");
                 setIsLoading(false)
