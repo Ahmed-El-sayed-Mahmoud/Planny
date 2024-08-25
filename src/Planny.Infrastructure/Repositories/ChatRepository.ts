@@ -11,10 +11,13 @@ import { StatusCodes } from "@/src/Constants/ErrorStatusCodes";
 export class ChatRepository implements IChatRepository {
 
   async createChat(chat: TablesInsert<'chat'>): Promise<RepositoryRespone<Tables<'chat'>>> {
+    console.log("repo : ",chat)
     const response: RepositoryRespone<Tables<'chat'>> = {};
     try {
       [response.data] = await db.insert(chatTable).values(chat).returning();
+
     } catch (error) {
+      console.log(error)
       response.error = {
         status: StatusCodes.INTERNAL_SERVER_ERROR,
         message: `Error Creating new chat`

@@ -15,7 +15,7 @@ import { MobileSidebar } from "../SideBar/MobileSideBar";
 import { useRouter } from "next/navigation";
 
 function ChatPage() {
-  const { messages, isLoading, activeChatId, setMessages } = useChat();
+  const { messages, isLoading, activeChatId, setMessages,chats } = useChat();
   const chatAreaRef = useRef<HTMLDivElement>(null);
   const [loadingMsgs, setLoadingMsgs] = useState(false);
   const router = useRouter();
@@ -56,7 +56,7 @@ function ChatPage() {
   }, [activeChatId, setMessages, router]);
 
   return (
-    <div className="h-full w-full flex flex-col">
+    <div className="h-full w-full flex flex-col relative">
       <div className="absolute top-[90px] left-5">
         <MobileSidebar />
       </div>
@@ -65,6 +65,7 @@ function ChatPage() {
         ref={chatAreaRef}
         className="flex-1 overflow-y-auto p-4 bg-gray-100 w-full overflow-x-hidden custom-scrollbar"
       >
+        
         {loadingMsgs ? (
           <MessagesLoader />
         ) : (
@@ -78,9 +79,15 @@ function ChatPage() {
             />
           ))
         )}
+        {chats&& chats.length === 0 ? (
+  <h2 className="text-2xl font-semibold text-gray-500 text-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+    Start a new chat and start planning your upcoming event with Planny
+  </h2>
+) : ""}
+
         {isLoading && <LoadingMsg />}
       </div>
-
+      
       <div className="chatInput p-2 bg-slate-100">
         {activeChatId && <InputText />}
       </div>
