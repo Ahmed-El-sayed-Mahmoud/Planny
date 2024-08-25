@@ -51,7 +51,7 @@ function ChatPage() {
     };
 
     loadMessages();
-  }, [activeChatId, setMessages, router]);
+  }, [activeChatId]);
 
   return (
     <div className="h-full w-full flex flex-col relative">

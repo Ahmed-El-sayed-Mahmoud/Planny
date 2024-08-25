@@ -33,7 +33,7 @@ function ChatList() {
             }
         };
         LoadChats();
-    }, [setActiveChatId, setChats,router]);
+    }, [router]);
 
     const handleChange = (id: number) => {
         setActiveChatId(id);
