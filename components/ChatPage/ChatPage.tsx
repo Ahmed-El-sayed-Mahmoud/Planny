@@ -16,6 +16,7 @@ function ChatPage() {
   const { messages, isLoading, activeChatId, setMessages, chats } = useChat();
   const chatAreaRef = useRef<HTMLDivElement>(null);
   const [loadingMsgs, setLoadingMsgs] = useState(false);
+  const [chatsLoaded, setChatsLoaded] = useState(false);
   const router = useRouter();
 
   const scrollToBottom = () => {
@@ -29,25 +30,33 @@ function ChatPage() {
   }, [messages]);
 
   useEffect(() => {
-    const loadMessages = async () => {
+    const loadMessages = () => {
       if (!activeChatId) return;
       setLoadingMsgs(true);
-      const fetchedMessages = await LoadNewMessages(activeChatId!);
-      if (!fetchedMessages) {
-        router.push("/login");
-        return;
-      }
-      if (fetchedMessages.error) {
-        toast.error(fetchedMessages.error.message);
-        if (fetchedMessages.error.status === 401) {
-          router.push("/login");
-          return;
-        }
-      } else {
-        setMessages(fetchedMessages.data as Tables<"message">[]);
-        await ChangeHistoryAction(fetchedMessages.data!);
-        setLoadingMsgs(false);
-      }
+      LoadNewMessages(activeChatId!)
+        .then(fetchedMessages => {
+          if (!fetchedMessages) {
+            router.push("/login");
+            return;
+          }
+          if (fetchedMessages.error) {
+            toast.error(fetchedMessages.error.message);
+            if (fetchedMessages.error.status === 401) {
+              router.push("/login");
+              return;
+            }
+          } else {
+            setMessages(fetchedMessages.data as Tables<"message">[]);
+            ChangeHistoryAction(fetchedMessages.data!);
+          }
+        })
+        .catch(() => {
+          toast.error("An error occurred while loading messages.");
+        })
+        .finally(() => {
+          setLoadingMsgs(false);
+        });
+      setChatsLoaded(true);
     };
 
     loadMessages();
@@ -63,7 +72,7 @@ function ChatPage() {
         ref={chatAreaRef}
         className="flex-1 overflow-y-auto p-4 bg-gray-100 w-full overflow-x-hidden custom-scrollbar"
       >
-        {loadingMsgs===false ? (
+        {loadingMsgs ? (
           <MessagesLoader />
         ) : (
           messages.map((val, index) => (
@@ -76,19 +85,16 @@ function ChatPage() {
             />
           ))
         )}
-        {chats && chats.length === 0 ? (
+        {chatsLoaded && chats.length === 0 && !isLoading && (
           <div className="text-2xl font-semibold text-gray-500 text-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[60%]  ">
             <h2>
               Start a new chat and start planning your upcoming event with
               Planny
             </h2>
             <div className="h-[200px] lg:hidden w-[70%] mx-auto">
-            <Modal />
+              <Modal />
             </div>
-            
           </div>
-        ) : (
-          ""
         )}
 
         {isLoading && <LoadingMsg />}
