@@ -19,7 +19,7 @@ export default function SideBar() {
         <h2 className="text-lg font-semibold">Chats</h2>
         <div
           className="flex-grow overflow-y-scroll custom-scrollbar mb-4 "
-          style={{ height: "55%" }}
+          style={{ height: "50%" }}
         >
          
           <ul>
@@ -27,7 +27,7 @@ export default function SideBar() {
           </ul>
         </div>
 
-        <div className="w-[95%] absolute bottom-0  ">
+        <div className="w-[90%] absolute bottom-0 mx-auto  ">
           <Modal />
         </div>
       </div>
