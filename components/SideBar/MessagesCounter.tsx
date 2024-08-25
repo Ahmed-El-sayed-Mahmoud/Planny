@@ -3,7 +3,7 @@ import { useChat } from "@/context/ChatContext";
 import React, { useEffect, useState } from "react";
 
 function MessagesCounter() {
-    const { messages } = useChat();
+    const { messages, activeChatId } = useChat();
     const messageCount = messages.length;
     const messageLimit = 50;
     const [color, setColor] = useState("text-green-600");
@@ -20,10 +20,14 @@ function MessagesCounter() {
 
     const percentage = (messageCount / messageLimit) * 100;
 
+    if (activeChatId === null) {
+        return null;
+    }
+
     return (
         <div className="mb-4">
             <h2 className="text-lg font-semibold 2xs:hidden lg:block">Chat Messages</h2>
-            <div className=" rounded-lg p-2 mt-2">
+            <div className="rounded-lg p-2 mt-2">
                 <div className="flex items-center justify-center mb-2">
                     <p className={`text-xs font-bold ${color}`}>
                         {messageCount}/{messageLimit} ({Math.round(percentage)}%)

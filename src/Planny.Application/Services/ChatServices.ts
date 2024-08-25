@@ -32,7 +32,7 @@ export class ChatServices implements IChatServices {
 
     const newChat: TablesInsert<'chat'> = { name, user_email: authUser.email };
     const repoResponse = await this._chatRepository.createChat(newChat);
-    
+    console.log("response repo:   ",response)
     if (repoResponse.error) {
       response.error = repoResponse.error;
     } else {
