@@ -4,6 +4,7 @@ import { createClient } from "./supabase/server";
 import { AuthError, AuthOtpResponse } from "@supabase/supabase-js";
 import { DI_TYPES } from "@/src/DI/DI_TYPES";
 import type { IUserRepository } from "@/src/Planny.Domain/IRepositories/IUsersRepository";
+import { error } from "console";
 
 @injectable()
 export class AuthServices implements IAuthServices {
@@ -52,9 +53,9 @@ export class AuthServices implements IAuthServices {
 
         const user = await this._userRepository.getUser(email);
         if (!user) {
-            const { error: createUserError } = await this._userRepository.createUser({ email, name: email });
-            if (createUserError) {
-                console.error("Error creating user after OTP verification:", createUserError.message);
+            const res = await this._userRepository.createUser({ email, name: email });
+            if (res.error) {
+                console.error("Error creating user after OTP verification:", res.error.message);
                 return new AuthError("User creation failed after OTP verification");
             }
         }
