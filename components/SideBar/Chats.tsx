@@ -28,7 +28,8 @@ function ChatList() {
             setChats(fetchedChats?.data!);
             setLoading(false);
             if (fetchedChats.data && fetchedChats.data.length > 0) {
-                setActiveChatId(fetchedChats?.data?.at(0)!.id);
+                if(!activeChatId)
+                    setActiveChatId(fetchedChats?.data?.at(0)!.id);
             }
         };
         LoadChats();
