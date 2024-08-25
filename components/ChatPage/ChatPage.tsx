@@ -77,12 +77,15 @@ function ChatPage() {
           ))
         )}
         {chats && chats.length === 0 ? (
-          <div className="text-2xl font-semibold text-gray-500 text-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[90%] h-[50%]">
+          <div className="text-2xl font-semibold text-gray-500 text-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[60%]  ">
             <h2>
               Start a new chat and start planning your upcoming event with
               Planny
             </h2>
+            <div className="h-[200px] lg:hidden w-[70%] mx-auto">
             <Modal />
+            </div>
+            
           </div>
         ) : (
           ""
