@@ -63,7 +63,7 @@ function ChatPage() {
         ref={chatAreaRef}
         className="flex-1 overflow-y-auto p-4 bg-gray-100 w-full overflow-x-hidden custom-scrollbar"
       >
-        {loadingMsgs ? (
+        {loadingMsgs===false ? (
           <MessagesLoader />
         ) : (
           messages.map((val, index) => (
