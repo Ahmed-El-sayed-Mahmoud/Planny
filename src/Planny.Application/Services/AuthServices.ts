@@ -52,7 +52,7 @@ export class AuthServices implements IAuthServices {
         }
 
         const user = await this._userRepository.getUser(email);
-        if (!user) {
+        if (!user.data) {
             const res = await this._userRepository.createUser({ email, name: email });
             if (res.error) {
                 console.error("Error creating user after OTP verification:", res.error.message);
