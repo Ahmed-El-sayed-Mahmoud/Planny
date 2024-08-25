@@ -1,4 +1,4 @@
-"use client";
+'use client'
 import React, { useRef, useEffect, useState } from "react";
 import InputText from "./InputText";
 import Message from "./Message";
@@ -56,11 +56,13 @@ function ChatPage() {
         .finally(() => {
           setLoadingMsgs(false);
         });
-      setChatsLoaded(true);
     };
 
     loadMessages();
+    setChatsLoaded(true);
   }, [activeChatId]);
+
+
 
   return (
     <div className="h-full w-full flex flex-col relative">
@@ -85,8 +87,9 @@ function ChatPage() {
             />
           ))
         )}
-        {chatsLoaded && chats.length === 0 && !isLoading && (
-          <div className="text-2xl font-semibold text-gray-500 text-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[60%]  ">
+
+        {!isLoading && chatsLoaded && chats.length === 0 && (
+          <div className="text-2xl font-semibold text-gray-500 text-center absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[60%]">
             <h2>
               Start a new chat and start planning your upcoming event with
               Planny
